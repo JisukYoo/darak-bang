@@ -1,11 +1,27 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpenText, CalendarDays, ChevronDown, ClipboardCheck, Clock, HandHeart, MapPin, Music2, Pin } from 'lucide-react'
+import {
+  BookOpenText,
+  CalendarDays,
+  ChevronDown,
+  ClipboardCheck,
+  Clock,
+  HandHeart,
+  ImageIcon,
+  ImagePlus,
+  MapPin,
+  Music2,
+  Pin,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { members } from '@/lib/darak-data'
+import { photoSrc } from '@/lib/photo-storage'
+import { useBanner, usePhotos } from '@/hooks/use-photos'
 import { useApp } from './app-provider'
+import { BannerPicker } from './banner-picker'
 import { MemberAvatar } from './member-avatar'
+import { PhotoUploadButton } from './photo-upload-button'
 
 export function Dashboard() {
   return (
@@ -16,19 +32,89 @@ export function Dashboard() {
       </div>
       <GatheringCard />
       <QuickActions />
+      <PhotoStrip />
       <NoticeSection />
     </div>
   )
 }
 
+function PhotoStrip() {
+  const { groupId, setHomeView } = useApp()
+  const { photos, isLoading, upload } = usePhotos(groupId)
+  const recent = photos.slice(0, 6)
+
+  return (
+    <section aria-labelledby="photos-title" className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h2 id="photos-title" className="tracking-tight text-lg font-semibold">
+          함께한 순간
+        </h2>
+        <button type="button" onClick={() => setHomeView('photos')} className="text-sm font-medium text-primary">
+          {photos.length > 0 ? `사진첩 ${photos.length}장` : '사진첩'}
+        </button>
+      </div>
+      <ul className="-mx-5 flex snap-x gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
+        <li className="shrink-0 snap-start">
+          <PhotoUploadButton
+            onUpload={upload}
+            variant="secondary"
+            aria-label="사진 올리기"
+            className="flex size-24 flex-col gap-1 rounded-2xl text-xs"
+          >
+            <ImagePlus className="size-5" aria-hidden />
+            올리기
+          </PhotoUploadButton>
+        </li>
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <li key={i} className="size-24 shrink-0 animate-pulse rounded-2xl bg-muted" />
+            ))
+          : recent.map((photo) => (
+              <li key={photo.pathname} className="shrink-0 snap-start">
+                <button
+                  type="button"
+                  onClick={() => setHomeView('photos')}
+                  className="block size-24 overflow-hidden rounded-2xl bg-muted"
+                  aria-label="사진첩에서 보기"
+                >
+                  <img src={photoSrc(photo.pathname)} alt="" loading="lazy" className="size-full object-cover" />
+                </button>
+              </li>
+            ))}
+      </ul>
+    </section>
+  )
+}
+
 function GatheringCard() {
-  const { group, setHomeView } = useApp()
+  const { group, groupId, setHomeView } = useApp()
+  const { bannerPath } = useBanner(groupId)
+  const [pickerOpen, setPickerOpen] = useState(false)
 
   return (
     <section
       aria-labelledby="gathering-title"
-      className="relative overflow-hidden rounded-3xl bg-primary px-6 pt-8 pb-6 text-primary-foreground shadow-md"
+      className="relative isolate overflow-hidden rounded-3xl bg-primary px-6 pt-8 pb-6 text-primary-foreground shadow-md"
     >
+      {bannerPath && (
+        <>
+          <img
+            src={photoSrc(bannerPath)}
+            alt=""
+            className="absolute inset-0 -z-10 size-full object-cover animate-in fade-in-0 duration-500"
+          />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-foreground/30 via-foreground/45 to-foreground/75" aria-hidden />
+        </>
+      )}
+      <button
+        type="button"
+        onClick={() => setPickerOpen(true)}
+        className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-3 py-1.5 text-xs font-medium backdrop-blur-sm transition hover:bg-primary-foreground/25"
+      >
+        <ImageIcon className="size-3.5" aria-hidden />
+        배경
+      </button>
+      <BannerPicker open={pickerOpen} onOpenChange={setPickerOpen} />
       <div className="flex flex-col items-center gap-1 text-center">
         <p className="text-xs font-medium tracking-widest text-primary-foreground/75 uppercase">다음 모임</p>
         <h2 id="gathering-title" className="tracking-tight text-3xl font-semibold">

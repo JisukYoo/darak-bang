@@ -8,6 +8,7 @@ import { Dashboard } from './dashboard'
 import { GiftView } from './gift-view'
 import { HymnsView } from './hymns-view'
 import { OnboardingWizard } from './onboarding-wizard'
+import { PhotosView } from './photos-view'
 import { PrayerView } from './prayer-view'
 import { ProfileView } from './profile-view'
 import { TopBar } from './top-bar'
@@ -32,7 +33,15 @@ function Screens() {
       <TopBar />
       <main key={`${tab}-${homeView}`} className="flex-1 animate-in fade-in-0 duration-300">
         {tab === 'home' &&
-          (homeView === 'attendance' ? <AttendanceView /> : homeView === 'hymns' ? <HymnsView /> : <Dashboard />)}
+          (homeView === 'attendance' ? (
+            <AttendanceView />
+          ) : homeView === 'hymns' ? (
+            <HymnsView />
+          ) : homeView === 'photos' ? (
+            <PhotosView />
+          ) : (
+            <Dashboard />
+          ))}
         {tab === 'bible' && <BibleView />}
         {tab === 'prayer' && <PrayerView />}
         {tab === 'gift' && <GiftView />}
