@@ -6,15 +6,23 @@ import {
   type Church,
   type Darakbang,
   type FeedPost,
+  type Member,
+  type Notice,
+  type NoticeComment,
+  ME_ID,
   churches as seedChurches,
   initialAttendance,
+  initialComments,
   initialGroups,
   initialNotices,
   initialPosts,
+  members,
 } from '@/lib/darak-data'
 
 export type Tab = 'home' | 'bible' | 'prayer' | 'gift' | 'profile'
-export type HomeView = 'dashboard' | 'attendance' | 'hymns' | 'photos'
+export type HomeView = 'dashboard' | 'attendance' | 'hymns' | 'photos' | 'notice'
+
+export type NewNotice = Pick<Notice, 'title' | 'body' | 'pinned' | 'address' | 'commentPrompt'>
 
 type AppState = {
   churches: Church[]
@@ -36,8 +44,18 @@ type AppState = {
   markAll: (status: AttendanceStatus) => void
   posts: FeedPost[]
   togglePray: (postId: string) => void
-  addPost: (post: Pick<FeedPost, 'type' | 'content' | 'verse'>) => void
-  notices: typeof initialNotices
+  addPost: (post: Pick<FeedPost, 'type' | 'content' | 'verse' | 'coAuthorId'>) => void
+  editPost: (postId: string, content: string) => void
+  me: Member
+  spouse: Member | undefined
+  canEditPost: (post: FeedPost) => boolean
+  notices: Notice[]
+  addNotice: (notice: NewNotice) => void
+  openNotice: (id: string) => void
+  activeNotice: Notice | undefined
+  comments: NoticeComment[]
+  addComment: (noticeId: string, content: string) => void
+  deleteComment: (commentId: string) => void
   bookmarks: string[]
   toggleBookmark: (key: string) => void
   highlights: string[]
@@ -57,6 +75,57 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [posts, setPosts] = useState<FeedPost[]>(initialPosts)
   const [bookmarks, setBookmarks] = useState<string[]>(['jhn-15-5'])
   const [highlights, setHighlights] = useState<string[]>(['jhn-15-4'])
+  const [notices, setNotices] = useState<Notice[]>(initialNotices)
+  const [comments, setComments] = useState<NoticeComment[]>(initialComments)
+  const [noticeId, setNoticeId] = useState<string | null>(null)
+
+  const me = members.find((m) => m.id === ME_ID) ?? members[0]
+  const group = groups.find((g) => g.id === groupId)
+  const spouse = group?.isCouple ? members.find((m) => m.id === me.spouseId) : undefined
+
+  const canEditPost = useCallback(
+    (post: FeedPost) => post.authorId === me.id || post.coAuthorId === me.id,
+    [me.id],
+  )
+
+  const editPost = useCallback(
+    (postId: string, content: string) => {
+      setPosts((prev) =>
+        prev.map((p) => (p.id === postId ? { ...p, content, editedBy: me.id, createdAt: '방금 수정' } : p)),
+      )
+    },
+    [me.id],
+  )
+
+  const addNotice = useCallback(
+    (notice: NewNotice) => {
+      const id = `n-${Date.now()}`
+      setNotices((prev) => {
+        const next = notice.pinned ? prev.map((n) => ({ ...n, pinned: false })) : prev
+        return [{ ...notice, id, authorId: me.id, date: '오늘' }, ...next]
+      })
+    },
+    [me.id],
+  )
+
+  const openNotice = useCallback((id: string) => {
+    setNoticeId(id)
+    setHomeView('notice')
+  }, [])
+
+  const addComment = useCallback(
+    (noticeId: string, content: string) => {
+      setComments((prev) => [
+        ...prev,
+        { id: `cm-${Date.now()}`, noticeId, authorId: me.id, content, createdAt: '방금 전' },
+      ])
+    },
+    [me.id],
+  )
+
+  const deleteComment = useCallback((commentId: string) => {
+    setComments((prev) => prev.filter((c) => c.id !== commentId))
+  }, [])
 
   const selectChurch = useCallback((id: string | null) => {
     setChurchId(id)
@@ -104,12 +173,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     )
   }, [])
 
-  const addPost = useCallback((post: Pick<FeedPost, 'type' | 'content' | 'verse'>) => {
+  const addPost = useCallback((post: Pick<FeedPost, 'type' | 'content' | 'verse' | 'coAuthorId'>) => {
     setPosts((prev) => [
       {
         ...post,
         id: `p-${Date.now()}`,
-        authorId: 'm1',
+        authorId: ME_ID,
         createdAt: '방금 전',
         prayCount: 0,
         prayedByMe: false,
@@ -128,7 +197,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       churchId,
       groupId,
       church: churches.find((c) => c.id === churchId),
-      group: groups.find((g) => g.id === groupId),
+      group,
       selectChurch,
       selectGroup: setGroupId,
       addChurch,
@@ -143,13 +212,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       posts,
       togglePray,
       addPost,
-      notices: initialNotices,
+      editPost,
+      me,
+      spouse,
+      canEditPost,
+      notices,
+      addNotice,
+      openNotice,
+      activeNotice: notices.find((n) => n.id === noticeId),
+      comments,
+      addComment,
+      deleteComment,
       bookmarks,
       toggleBookmark: toggleIn(setBookmarks),
       highlights,
       toggleHighlight: toggleIn(setHighlights),
     }),
-    [churches, groups, churchId, groupId, selectChurch, addChurch, addGroup, tab, setTab, homeView, attendance, setAttendance, markAll, posts, togglePray, addPost, bookmarks, highlights],
+    [churches, groups, churchId, groupId, group, selectChurch, addChurch, addGroup, tab, setTab, homeView, attendance, setAttendance, markAll, posts, togglePray, addPost, editPost, me, spouse, canEditPost, notices, addNotice, openNotice, noticeId, comments, addComment, deleteComment, bookmarks, highlights],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookMarked, HandHeart, PenLine } from 'lucide-react'
+import { BookMarked, HandHeart, PenLine, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -10,7 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { type FeedPost, members } from '@/lib/darak-data'
 import { useApp } from './app-provider'
-import { MemberAvatar } from './member-avatar'
+import { CoupleAvatars, MemberAvatar } from './member-avatar'
+import { PostEditDialog } from './post-edit-dialog'
 
 type FeedType = FeedPost['type']
 
@@ -23,6 +24,7 @@ export function PrayerView() {
   const { posts } = useApp()
   const [active, setActive] = useState<FeedType>('prayer')
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editing, setEditing] = useState<FeedPost | null>(null)
   const feed = posts.filter((p) => p.type === active)
 
   return (
@@ -56,7 +58,7 @@ export function PrayerView() {
 
       <ul id="feed-panel" role="tabpanel" aria-labelledby={`tab-${active}`} className="flex flex-col gap-3">
         {feed.map((post) => (
-          <FeedCard key={post.id} post={post} />
+          <FeedCard key={post.id} post={post} onEdit={setEditing} />
         ))}
       </ul>
 
@@ -70,22 +72,45 @@ export function PrayerView() {
       </button>
 
       <NewPostDialog open={dialogOpen} onOpenChange={setDialogOpen} defaultType={active} onCreated={setActive} />
+      <PostEditDialog post={editing} onOpenChange={(open) => !open && setEditing(null)} />
     </div>
   )
 }
 
-function FeedCard({ post }: { post: FeedPost }) {
-  const { togglePray } = useApp()
+function FeedCard({ post, onEdit }: { post: FeedPost; onEdit: (post: FeedPost) => void }) {
+  const { togglePray, canEditPost } = useApp()
   const author = members.find((m) => m.id === post.authorId) ?? members[0]
+  const coAuthor = members.find((m) => m.id === post.coAuthorId)
+  const editor = members.find((m) => m.id === post.editedBy)
 
   return (
     <li className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border">
       <div className="flex items-center gap-3">
-        <MemberAvatar member={author} />
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">{author.name}</span>
-          <span className="text-xs text-muted-foreground">{post.createdAt}</span>
+        {coAuthor ? <CoupleAvatars members={[author, coAuthor]} /> : <MemberAvatar member={author} />}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <span className="flex items-center gap-1.5 text-sm font-medium">
+            {coAuthor ? `${author.name} · ${coAuthor.name}` : author.name}
+            {coAuthor && (
+              <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[11px] font-semibold text-secondary-foreground">
+                부부
+              </span>
+            )}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {post.createdAt}
+            {coAuthor && editor && ` · ${editor.name} 수정`}
+          </span>
         </div>
+        {canEditPost(post) && (
+          <button
+            type="button"
+            onClick={() => onEdit(post)}
+            className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            aria-label="수정하기"
+          >
+            <Pencil className="size-4" aria-hidden />
+          </button>
+        )}
       </div>
       {post.verse && (
         <span className="flex w-fit items-center gap-1.5 rounded-full bg-highlight px-3 py-1 tracking-tight text-xs font-semibold text-accent-foreground">
@@ -93,7 +118,7 @@ function FeedCard({ post }: { post: FeedPost }) {
           {post.verse}
         </span>
       )}
-      <p className="text-[15px] leading-relaxed text-pretty">{post.content}</p>
+      <p className="text-[15px] leading-relaxed whitespace-pre-line text-pretty">{post.content}</p>
       <div className="flex items-center justify-between border-t pt-3">
         <button
           type="button"
@@ -129,8 +154,10 @@ function NewPostDialog({
   defaultType: FeedType
   onCreated: (type: FeedType) => void
 }) {
-  const { addPost } = useApp()
+  const { addPost, spouse, me } = useApp()
   const [type, setType] = useState<FeedType>(defaultType)
+  const [together, setTogether] = useState(true)
+  const asCouple = type === 'prayer' && !!spouse && together
 
   return (
     <Dialog
@@ -153,7 +180,12 @@ function NewPostDialog({
             const content = String(data.get('content')).trim()
             if (!content) return
             const verse = String(data.get('verse') ?? '').trim()
-            addPost({ type, content, verse: type === 'meditation' && verse ? verse : undefined })
+            addPost({
+              type,
+              content,
+              verse: type === 'meditation' && verse ? verse : undefined,
+              coAuthorId: asCouple ? spouse?.id : undefined,
+            })
             onCreated(type)
             onOpenChange(false)
           }}
@@ -175,6 +207,27 @@ function NewPostDialog({
               </button>
             ))}
           </div>
+          {type === 'prayer' && spouse && (
+            <button
+              type="button"
+              role="switch"
+              aria-checked={together}
+              onClick={() => setTogether((v) => !v)}
+              className={cn(
+                'flex items-center gap-3 rounded-xl border p-3 text-left transition',
+                together ? 'border-primary bg-secondary text-secondary-foreground' : 'text-muted-foreground',
+              )}
+            >
+              <CoupleAvatars members={[me, spouse]} size="sm" ringClassName="ring-background" />
+              <span className="flex flex-1 flex-col">
+                <span className="text-sm font-medium">{spouse.name}님과 함께 쓰기</span>
+                <span className="text-xs opacity-80">부부 모두 수정할 수 있어요</span>
+              </span>
+              <span className={cn('h-5 w-9 shrink-0 rounded-full p-0.5 transition', together ? 'bg-primary' : 'bg-muted')}>
+                <span className={cn('block size-4 rounded-full bg-card shadow transition', together && 'translate-x-4')} />
+              </span>
+            </button>
+          )}
           {type === 'meditation' && (
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="post-verse">오늘의 말씀</Label>

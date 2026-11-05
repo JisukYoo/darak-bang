@@ -7,6 +7,7 @@ import { BottomNav } from './bottom-nav'
 import { Dashboard } from './dashboard'
 import { GiftView } from './gift-view'
 import { HymnsView } from './hymns-view'
+import { NoticeDetailView } from './notice-detail-view'
 import { OnboardingWizard } from './onboarding-wizard'
 import { PhotosView } from './photos-view'
 import { PrayerView } from './prayer-view'
@@ -39,6 +40,8 @@ function Screens() {
             <HymnsView />
           ) : homeView === 'photos' ? (
             <PhotosView />
+          ) : homeView === 'notice' ? (
+            <NoticeDetailView />
           ) : (
             <Dashboard />
           ))}

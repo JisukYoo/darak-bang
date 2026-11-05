@@ -8,24 +8,40 @@ export type Darakbang = {
   schedule: string
   location: string
   memberCount: number
+  isCouple?: boolean
 }
 
 export type AttendanceStatus = 'present' | 'absent' | 'online' | 'unmarked'
 
-export type Member = { id: string; name: string; role?: string; initial: string; tone: number }
+export type Member = { id: string; name: string; role?: string; initial: string; tone: number; spouseId?: string }
 
 export type FeedPost = {
   id: string
   type: 'prayer' | 'meditation'
   authorId: string
+  coAuthorId?: string
   content: string
   verse?: string
   createdAt: string
+  editedBy?: string
   prayCount: number
   prayedByMe: boolean
 }
 
-export type Notice = { id: string; title: string; body: string; date: string; pinned?: boolean }
+export type Notice = {
+  id: string
+  title: string
+  body: string
+  date: string
+  authorId: string
+  pinned?: boolean
+  address?: string
+  commentPrompt?: string
+}
+
+export type NoticeComment = { id: string; noticeId: string; authorId: string; content: string; createdAt: string }
+
+export const ME_ID = 'm1'
 
 export const churches: Church[] = [
   { id: 'c1', name: '은혜샘교회', location: '서울 마포구', denomination: '대한예수교장로회' },
@@ -36,7 +52,7 @@ export const churches: Church[] = [
 ]
 
 export const initialGroups: Darakbang[] = [
-  { id: 'g1', churchId: 'c1', name: '요셉 다락방', leader: '김은혜', schedule: '매주 금요일 오후 8시', location: '교육관 3층 다락방실', memberCount: 15 },
+  { id: 'g1', churchId: 'c1', name: '요셉 다락방', leader: '김은혜', schedule: '매주 금요일 오후 8시', location: '교육관 3층 다락방실', memberCount: 15, isCouple: true },
   { id: 'g2', churchId: 'c1', name: '룻 다락방', leader: '박소망', schedule: '매주 수요일 오후 7시 30분', location: '본당 2층 소예배실', memberCount: 9 },
   { id: 'g3', churchId: 'c1', name: '청년 디모데 다락방', leader: '이믿음', schedule: '매주 주일 오후 2시', location: '카페 소금빛', memberCount: 12 },
   { id: 'g4', churchId: 'c2', name: '여호수아 다락방', leader: '최사랑', schedule: '매주 목요일 오후 8시', location: '비전센터 201호', memberCount: 11 },
@@ -44,16 +60,16 @@ export const initialGroups: Darakbang[] = [
 ]
 
 export const members: Member[] = [
-  { id: 'm1', name: '김은혜', role: '리더', initial: '은', tone: 0 },
-  { id: 'm2', name: '박준서', role: '부리더', initial: '준', tone: 1 },
+  { id: 'm1', name: '김은혜', role: '리더', initial: '은', tone: 0, spouseId: 'm2' },
+  { id: 'm2', name: '박준서', role: '부리더', initial: '준', tone: 1, spouseId: 'm1' },
   { id: 'm3', name: '이하늘', initial: '하', tone: 2 },
-  { id: 'm4', name: '최민지', initial: '민', tone: 0 },
+  { id: 'm4', name: '최민지', initial: '민', tone: 0, spouseId: 'm7' },
   { id: 'm5', name: '정다온', initial: '다', tone: 1 },
   { id: 'm6', name: '한소율', initial: '소', tone: 2 },
-  { id: 'm7', name: '오지훈', initial: '지', tone: 0 },
+  { id: 'm7', name: '오지훈', initial: '지', tone: 0, spouseId: 'm4' },
   { id: 'm8', name: '윤서진', initial: '서', tone: 1 },
-  { id: 'm9', name: '장예린', initial: '예', tone: 2 },
-  { id: 'm10', name: '강도윤', initial: '도', tone: 0 },
+  { id: 'm9', name: '장예린', initial: '예', tone: 2, spouseId: 'm10' },
+  { id: 'm10', name: '강도윤', initial: '도', tone: 0, spouseId: 'm9' },
   { id: 'm11', name: '신유나', initial: '유', tone: 1 },
   { id: 'm12', name: '임태오', initial: '태', tone: 2 },
   { id: 'm13', name: '홍가은', initial: '가', tone: 0 },
@@ -68,12 +84,30 @@ export const initialAttendance: Record<string, AttendanceStatus> = {
 }
 
 export const initialNotices: Notice[] = [
-  { id: 'n1', title: '이번 주 모임은 리더 가정에서 모여요', body: '교육관 공사로 이번 주 금요일은 김은혜 리더 댁(망원동)에서 모입니다. 간단한 저녁이 준비되어 있어요. 주소는 단톡방에 공유드렸습니다.', date: '11월 5일', pinned: true },
-  { id: 'n2', title: '11월 연합 다락방 찬양예배', body: '11월 23일(주일) 오후 4시 본당에서 연합 찬양예배가 있습니다. 다락방별 특송 준비를 부탁드려요.', date: '11월 3일' },
-  { id: 'n3', title: '이번 주 나눔 본문: 요한복음 15장', body: '포도나무와 가지 비유를 미리 읽고 와 주세요. 한 구절씩 마음에 남는 말씀을 나눌 예정입니다.', date: '11월 1일' },
+  {
+    id: 'n1',
+    title: '이번 주 모임은 리더 가정에서 모여요',
+    body: '교육관 공사로 이번 주 금요일은 저희 집에서 모입니다. 간단한 저녁이 준비되어 있어요.\n\n아파트 방문 차량은 미리 등록해야 해서, 차를 가져오시는 분은 댓글에 차량번호를 남겨주세요. 제가 주차 신청해 둘게요.',
+    date: '11월 5일',
+    authorId: 'm1',
+    pinned: true,
+    address: '서울 마포구 망원로 12길 34, 은혜빌 202호',
+    commentPrompt: '차량번호를 남겨주세요 (예: 12가 3456)',
+  },
+  { id: 'n2', title: '11월 연합 다락방 찬양예배', body: '11월 23일(주일) 오후 4시 본당에서 연합 찬양예배가 있습니다. 다락방별 특송 준비를 부탁드려요. 참여 가능한 분은 댓글로 알려주세요.', date: '11월 3일', authorId: 'm1', address: '은혜샘교회 본당' },
+  { id: 'n3', title: '이번 주 나눔 본문: 요한복음 15장', body: '포도나무와 가지 비유를 미리 읽고 와 주세요. 한 구절씩 마음에 남는 말씀을 나눌 예정입니다.', date: '11월 1일', authorId: 'm2' },
+]
+
+export const initialComments: NoticeComment[] = [
+  { id: 'cm1', noticeId: 'n1', authorId: 'm5', content: '34나 5678 입니다. 감사해요!', createdAt: '1시간 전' },
+  { id: 'cm2', noticeId: 'n1', authorId: 'm8', content: '저는 대중교통으로 갈게요. 디저트 챙겨갈게요 :)', createdAt: '40분 전' },
+  { id: 'cm3', noticeId: 'n1', authorId: 'm4', content: '오지훈 형제와 같이 가요. 56다 7890 부탁드려요.', createdAt: '12분 전' },
+  { id: 'cm4', noticeId: 'n2', authorId: 'm3', content: '특송 함께할게요!', createdAt: '어제' },
 ]
 
 export const initialPosts: FeedPost[] = [
+  { id: 'p0', type: 'prayer', authorId: 'm1', coAuthorId: 'm2', content: '1. 이사 준비 과정에서 좋은 집을 만나도록\n2. 준서 형제의 새 프로젝트가 잘 마무리되도록\n3. 바쁜 중에도 매일 밤 함께 기도하는 시간을 지킬 수 있도록', createdAt: '30분 전', editedBy: 'm2', prayCount: 5, prayedByMe: false },
+  { id: 'p00', type: 'prayer', authorId: 'm4', coAuthorId: 'm7', content: '내년 봄 태어날 아기와 산모의 건강을 위해 기도 부탁드려요. 부모가 될 준비를 믿음 안에서 잘 하고 싶어요.', createdAt: '5시간 전', prayCount: 12, prayedByMe: true },
   { id: 'p1', type: 'prayer', authorId: 'm3', content: '다음 주 중요한 면접이 있어요. 떨리는 마음보다 평안함으로 준비할 수 있도록 기도 부탁드립니다.', createdAt: '2시간 전', prayCount: 8, prayedByMe: false },
   { id: 'p2', type: 'prayer', authorId: 'm6', content: '어머니께서 수술 후 회복 중이세요. 빠른 회복과 가족 모두가 지치지 않도록 함께 기도해 주세요.', createdAt: '어제', prayCount: 14, prayedByMe: true },
   { id: 'p3', type: 'meditation', authorId: 'm2', verse: '요한복음 15:5', content: '가지가 스스로 열매를 맺으려 애쓰지 않듯, 오늘은 결과보다 주님 안에 "머무는" 것에 집중하고 싶어요. 바쁜 하루 중 세 번 멈춰서 기도하기로 했습니다.', createdAt: '3시간 전', prayCount: 6, prayedByMe: false },
@@ -110,7 +144,7 @@ export const bibleText: Record<string, string[]> = {
     '그가 나를 푸른 초장에 누이시며 쉴만한 물가으로 인도하시는도다',
     '내 영혼을 소생시키시고 자기 이름을 위하여 의의 길로 인도하시는도다',
     '내가 사망의 음침한 골짜기로 다닐지라도 해를 두려워하지 않을 것은 주께서 나와 함께 하심이라 주의 지팡이와 막대기가 나를 안위하시나이다',
-    '주께서 내 원수의 목전에서 내게 상을 베푸시고 기름으로 내 머리에 바르셨으니 내 잔이 넘치나이다',
+    '주께서 내 원수의 목전에서 내게 상을 베푸시고 기름으로 내 머리에 바르셨으니 내 잔이 넘��나이다',
     '나의 평생에 선하심과 인자하심이 정녕 나를 따르리니 내가 여호와의 집에 영원히 거하리로다',
   ],
   'jhn-3': [
