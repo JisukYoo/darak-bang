@@ -27,7 +27,7 @@ export function OnboardingWizard() {
               <ArrowLeft className="size-4" />
             </button>
           ) : (
-            <BrandLogo size="sm" />
+            <BrandLogo size="md" />
           )}
           <StepIndicator step={step} />
         </div>
@@ -192,7 +192,7 @@ function GroupStep() {
         </div>
         <Field id="g-name" name="name" label="다락방 이름" placeholder="예) 요셉 다락방" required />
         <Field id="g-leader" name="leader" label="리더" placeholder="예) 김은혜" required />
-        <Field id="g-schedule" name="schedule" label="모임 일정" placeholder="예) ��주 금요일 오후 8시" required />
+        <Field id="g-schedule" name="schedule" label="모임 일정" placeholder="예) ��주 금요일 ���후 8시" required />
         <Field id="g-location" name="location" label="모임 장소" placeholder="예) 교육관 3층 다락방실" required />
         <div className="flex gap-2 pt-1">
           <Button type="button" variant="outline" className="h-11 flex-1 rounded-xl" onClick={() => setCreating(false)}>

@@ -8,10 +8,10 @@ type BrandLogoProps = {
 }
 
 export function BrandLogo({ size = 'md', showWordmark = true, className }: BrandLogoProps) {
-  const emblem = size === 'sm' ? 'size-9 rounded-xl p-1' : 'size-11 rounded-2xl p-1.5'
+  const emblem = size === 'sm' ? 'size-12 rounded-2xl p-1' : 'size-16 rounded-3xl p-1.5'
 
   return (
-    <span className={cn('flex shrink-0 items-center gap-2', className)}>
+    <span className={cn('flex shrink-0 items-center gap-2.5', className)}>
       <span
         className={cn(
           'flex shrink-0 items-center justify-center bg-card shadow-sm ring-1 ring-border',
@@ -31,7 +31,7 @@ export function BrandLogo({ size = 'md', showWordmark = true, className }: Brand
         <span
           className={cn(
             'flex items-baseline font-logo font-bold leading-none',
-            size === 'sm' ? 'text-2xl' : 'text-[1.7rem]',
+            size === 'sm' ? 'text-[2rem]' : 'text-[2.6rem]',
           )}
         >
           <span className="text-warm">온</span>
