@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpenText, CalendarDays, ChevronDown, ClipboardCheck, Clock, HandHeart, MapPin, Megaphone, Pin } from 'lucide-react'
+import { BookOpenText, CalendarDays, ChevronDown, ClipboardCheck, Clock, HandHeart, MapPin, Music2, Pin } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { members } from '@/lib/darak-data'
 import { useApp } from './app-provider'
@@ -74,11 +74,7 @@ function QuickActions() {
 
   const actions = [
     { label: '출석체크', icon: ClipboardCheck, onClick: () => setHomeView('attendance') },
-    {
-      label: '공지사항',
-      icon: Megaphone,
-      onClick: () => document.getElementById('notices')?.scrollIntoView({ behavior: 'smooth' }),
-    },
+    { label: '찬양', icon: Music2, onClick: () => setHomeView('hymns') },
     { label: '기도제목', icon: HandHeart, onClick: () => setTab('prayer') },
     { label: '말씀읽기', icon: BookOpenText, onClick: () => setTab('bible') },
   ]

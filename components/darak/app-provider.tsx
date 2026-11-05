@@ -14,7 +14,7 @@ import {
 } from '@/lib/darak-data'
 
 export type Tab = 'home' | 'bible' | 'prayer' | 'gift' | 'profile'
-export type HomeView = 'dashboard' | 'attendance'
+export type HomeView = 'dashboard' | 'attendance' | 'hymns'
 
 type AppState = {
   churches: Church[]

@@ -6,6 +6,7 @@ import { BibleView } from './bible-view'
 import { BottomNav } from './bottom-nav'
 import { Dashboard } from './dashboard'
 import { GiftView } from './gift-view'
+import { HymnsView } from './hymns-view'
 import { OnboardingWizard } from './onboarding-wizard'
 import { PrayerView } from './prayer-view'
 import { ProfileView } from './profile-view'
@@ -30,7 +31,8 @@ function Screens() {
     <div className="flex min-h-dvh flex-col">
       <TopBar />
       <main key={`${tab}-${homeView}`} className="flex-1 animate-in fade-in-0 duration-300">
-        {tab === 'home' && (homeView === 'attendance' ? <AttendanceView /> : <Dashboard />)}
+        {tab === 'home' &&
+          (homeView === 'attendance' ? <AttendanceView /> : homeView === 'hymns' ? <HymnsView /> : <Dashboard />)}
         {tab === 'bible' && <BibleView />}
         {tab === 'prayer' && <PrayerView />}
         {tab === 'gift' && <GiftView />}
