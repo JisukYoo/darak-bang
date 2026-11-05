@@ -17,7 +17,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: '다락방 Darakbang — 함께 말씀과 기도로',
+  title: '온다락방 — 따뜻한 다락방 공동체',
   description:
     '교회 다락방(소그룹) 모임을 위한 앱. 출석체크, 기도제목 나눔, 말씀 묵상, 성경 읽기, 맞춤 성경 선물까지.',
   generator: 'v0.app',

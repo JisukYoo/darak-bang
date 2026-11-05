@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { ArrowLeft, Check, Church, MapPin, Plus, Search, Users, CalendarClock, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { useApp } from './app-provider'
+import { BrandLogo } from './brand-logo'
 
 export function OnboardingWizard() {
   const { churchId, selectChurch } = useApp()
@@ -27,17 +27,7 @@ export function OnboardingWizard() {
               <ArrowLeft className="size-4" />
             </button>
           ) : (
-            <div className="flex items-center gap-2">
-              <Image
-                src="/logo.png"
-                alt=""
-                width={40}
-                height={40}
-                priority
-                className="size-10 rounded-xl"
-              />
-              <span className="tracking-tight text-lg font-semibold text-primary">다락방</span>
-            </div>
+            <BrandLogo size="sm" />
           )}
           <StepIndicator step={step} />
         </div>

@@ -26,6 +26,7 @@
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --color-highlight: var(--highlight);
+  --color-warm: var(--warm);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -53,6 +54,7 @@
   --accent: oklch(0.9 0.15 98);
   --accent-foreground: oklch(0.32 0.07 80);
   --highlight: oklch(0.95 0.1 100);
+  --warm: oklch(0.66 0.17 50);
   --destructive: oklch(0.63 0.21 22);
   --border: oklch(0.92 0.01 255);
   --input: oklch(0.9 0.012 255);
