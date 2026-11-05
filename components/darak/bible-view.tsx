@@ -45,7 +45,7 @@ export function BibleView() {
   return (
     <div className="flex flex-col gap-4 pt-2 pb-8">
       <div className="flex flex-col gap-3 px-5">
-        <h1 className="font-serif text-2xl font-semibold">성경</h1>
+        <h1 className="tracking-tight text-2xl font-semibold">성경</h1>
         <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
@@ -73,7 +73,7 @@ export function BibleView() {
                   className="flex w-full flex-col gap-1 rounded-2xl bg-card p-4 text-left shadow-sm ring-1 ring-border transition hover:ring-primary/40"
                 >
                   <span className="text-xs font-semibold text-primary">{r.ref}</span>
-                  <span className="font-serif text-[15px] leading-relaxed">{r.text}</span>
+                  <span className="tracking-tight text-[15px] leading-relaxed">{r.text}</span>
                 </button>
               </li>
             ))}
@@ -116,7 +116,7 @@ export function BibleView() {
               aria-haspopup="dialog"
             >
               <span className="text-xs text-muted-foreground">{book.testament} · 개역한글</span>
-              <span className="font-serif text-xl font-semibold">
+              <span className="tracking-tight text-xl font-semibold">
                 {book.name} {chapter}장
               </span>
             </button>
@@ -147,7 +147,7 @@ export function BibleView() {
                         onClick={() => setSelected(isSelected ? null : n)}
                         aria-pressed={isSelected}
                         className={cn(
-                          'flex w-full gap-3 rounded-lg px-2 py-1.5 text-left font-serif text-[17px] leading-loose transition-colors',
+                          'flex w-full gap-3 rounded-lg px-2 py-1.5 text-left tracking-tight text-[17px] leading-loose transition-colors',
                           isHighlighted && 'bg-highlight/70',
                           isSelected && 'ring-2 ring-primary/50',
                         )}
@@ -166,7 +166,7 @@ export function BibleView() {
               </ol>
             ) : (
               <div className="flex flex-col items-center gap-2 py-10 text-center">
-                <p className="font-serif text-lg">본문을 준비 중이에요</p>
+                <p className="tracking-tight text-lg">본문을 준비 중이에요</p>
                 <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
                   미리보기에서는 창세기 1장, 시편 23장, 요한복음 3·15장, 빌립보서 4장을 읽을 수 있어요.
                 </p>
@@ -220,7 +220,7 @@ export function BibleView() {
       <Dialog open={chapterPickerOpen} onOpenChange={setChapterPickerOpen}>
         <DialogContent className="max-h-[80dvh] gap-4 overflow-y-auto rounded-2xl bg-card p-5">
           <DialogHeader>
-            <DialogTitle className="font-serif text-lg">{book.name} · 장 선택</DialogTitle>
+            <DialogTitle className="tracking-tight text-lg">{book.name} · 장 선택</DialogTitle>
           </DialogHeader>
           <ul className="grid grid-cols-6 gap-2">
             {Array.from({ length: book.chapters }, (_, i) => i + 1).map((n) => {

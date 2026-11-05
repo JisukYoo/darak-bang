@@ -5,8 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-noto-sans-kr), 'Noto Sans KR', system-ui, sans-serif;
-  --font-serif: var(--font-noto-serif-kr), 'Noto Serif KR', Georgia, serif;
+  --font-sans: var(--font-jakarta), var(--font-noto-sans-kr), 'Noto Sans KR', system-ui, sans-serif;
 
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -36,29 +35,29 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Palette: warm paper, deep olive ink, sage, amber */
+/* Palette: airy cool white, ink navy, electric blue, butter yellow */
 :root {
   color-scheme: light;
-  --background: oklch(0.975 0.012 85);
-  --foreground: oklch(0.28 0.025 125);
-  --card: oklch(0.995 0.005 85);
-  --card-foreground: oklch(0.28 0.025 125);
-  --popover: oklch(0.995 0.005 85);
-  --popover-foreground: oklch(0.28 0.025 125);
-  --primary: oklch(0.52 0.065 148);
-  --primary-foreground: oklch(0.99 0.005 85);
-  --secondary: oklch(0.94 0.025 140);
-  --secondary-foreground: oklch(0.36 0.05 148);
-  --muted: oklch(0.945 0.012 85);
-  --muted-foreground: oklch(0.5 0.02 110);
-  --accent: oklch(0.8 0.13 75);
-  --accent-foreground: oklch(0.3 0.06 60);
-  --highlight: oklch(0.92 0.09 88);
-  --destructive: oklch(0.58 0.18 30);
-  --border: oklch(0.9 0.015 90);
-  --input: oklch(0.88 0.018 90);
-  --ring: oklch(0.52 0.065 148);
-  --radius: 0.875rem;
+  --background: oklch(0.985 0.004 250);
+  --foreground: oklch(0.22 0.03 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.03 265);
+  --primary: oklch(0.6 0.2 258);
+  --primary-foreground: oklch(0.99 0.005 250);
+  --secondary: oklch(0.95 0.03 250);
+  --secondary-foreground: oklch(0.45 0.16 258);
+  --muted: oklch(0.96 0.006 250);
+  --muted-foreground: oklch(0.52 0.02 260);
+  --accent: oklch(0.9 0.15 98);
+  --accent-foreground: oklch(0.32 0.07 80);
+  --highlight: oklch(0.95 0.1 100);
+  --destructive: oklch(0.63 0.21 22);
+  --border: oklch(0.92 0.01 255);
+  --input: oklch(0.9 0.012 255);
+  --ring: oklch(0.6 0.2 258);
+  --radius: 1.125rem;
 }
 
 @layer base {

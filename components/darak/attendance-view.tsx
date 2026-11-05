@@ -39,7 +39,7 @@ export function AttendanceView() {
           <ArrowLeft className="size-4" aria-hidden />
         </button>
         <div>
-          <h1 className="font-serif text-xl font-semibold">출석체크</h1>
+          <h1 className="tracking-tight text-xl font-semibold">출석체크</h1>
           <p className="text-xs text-muted-foreground">11월 7일 금요일 · {group?.name}</p>
         </div>
       </div>
@@ -47,7 +47,7 @@ export function AttendanceView() {
       <section aria-label="출석 요약" className="flex flex-col gap-4 rounded-3xl bg-card p-5 shadow-sm ring-1 ring-border">
         <div className="flex items-end justify-between">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            오늘 <span className="font-serif text-3xl font-semibold text-foreground">{attended}</span>
+            오늘 <span className="tracking-tight text-3xl font-semibold text-foreground">{attended}</span>
             <span className="text-foreground"> / {total}명</span> 참석했어요
           </p>
           <span className="rounded-full bg-secondary px-2.5 py-1 text-sm font-semibold text-secondary-foreground">
@@ -81,7 +81,7 @@ export function AttendanceView() {
       </section>
 
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-lg font-semibold">멤버 {total}명</h2>
+        <h2 className="tracking-tight text-lg font-semibold">멤버 {total}명</h2>
         <button
           type="button"
           onClick={() => markAll('present')}

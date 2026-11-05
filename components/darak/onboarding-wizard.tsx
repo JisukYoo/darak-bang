@@ -26,13 +26,13 @@ export function OnboardingWizard() {
               <ArrowLeft className="size-4" />
             </button>
           ) : (
-            <span className="font-serif text-lg font-semibold text-primary">다락방</span>
+            <span className="tracking-tight text-lg font-semibold text-primary">다락방</span>
           )}
           <StepIndicator step={step} />
         </div>
         <div className="flex flex-col gap-1.5">
           <p className="text-sm font-medium text-primary">{step}단계 / 2</p>
-          <h1 className="font-serif text-2xl leading-snug font-semibold text-balance">
+          <h1 className="tracking-tight text-2xl leading-snug font-semibold text-balance">
             {step === 1 ? '어느 교회에 출석하고 계신가요?' : '함께할 다락방을 선택해 주세요'}
           </h1>
           <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
@@ -92,7 +92,7 @@ function ChurchStep() {
           selectChurch(id)
         }}
       >
-        <h2 className="font-serif text-lg font-semibold">새 교회 등록</h2>
+        <h2 className="tracking-tight text-lg font-semibold">새 교회 등록</h2>
         <Field id="church-name" name="name" label="교회 이름" placeholder="예) 은혜샘교회" required />
         <Field id="church-location" name="location" label="지역" placeholder="예) 서울 마포구" required />
         <Field id="church-denom" name="denomination" label="교단 (선택)" placeholder="예) 대한예수교장로회" />
@@ -186,7 +186,7 @@ function GroupStep() {
         }}
       >
         <div className="flex flex-col gap-1">
-          <h2 className="font-serif text-lg font-semibold">새 다락방 만들기</h2>
+          <h2 className="tracking-tight text-lg font-semibold">새 다락방 만들기</h2>
           <p className="text-sm text-muted-foreground">{church?.name}</p>
         </div>
         <Field id="g-name" name="name" label="다락방 이름" placeholder="예) 요셉 다락방" required />
@@ -229,7 +229,7 @@ function GroupStep() {
                 )}
               >
                 <span className="flex items-center justify-between">
-                  <span className="font-serif text-base font-semibold">{g.name}</span>
+                  <span className="tracking-tight text-base font-semibold">{g.name}</span>
                   <span
                     className={cn(
                       'flex size-5 items-center justify-center rounded-full border',

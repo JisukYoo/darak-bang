@@ -21,7 +21,7 @@ export function ProfileView() {
       <section className="flex items-center gap-4">
         <MemberAvatar member={me} className="size-16 text-xl" />
         <div className="flex flex-col">
-          <h1 className="font-serif text-2xl font-semibold">{me.name}</h1>
+          <h1 className="tracking-tight text-2xl font-semibold">{me.name}</h1>
           <p className="text-sm text-muted-foreground">
             {group?.name} · {me.role}
           </p>
@@ -44,7 +44,7 @@ export function ProfileView() {
       </dl>
 
       <section aria-labelledby="saved-title" className="flex flex-col gap-3">
-        <h2 id="saved-title" className="font-serif text-lg font-semibold">
+        <h2 id="saved-title" className="tracking-tight text-lg font-semibold">
           저장한 말씀
         </h2>
         {savedVerses.length ? (
@@ -52,7 +52,7 @@ export function ProfileView() {
             {savedVerses.map((v) => (
               <li key={v.key} className="flex flex-col gap-1 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border">
                 <span className="text-xs font-semibold text-primary">{v.ref}</span>
-                <p className="font-serif text-[15px] leading-relaxed">{v.text}</p>
+                <p className="tracking-tight text-[15px] leading-relaxed">{v.text}</p>
               </li>
             ))}
           </ul>

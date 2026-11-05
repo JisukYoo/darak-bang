@@ -1,18 +1,18 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_KR, Noto_Serif_KR } from 'next/font/google'
+import { Noto_Sans_KR, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 
 const notoSans = Noto_Sans_KR({
   subsets: ['latin'],
+  weight: ['400', '500', '700', '800'],
   variable: '--font-noto-sans-kr',
   display: 'swap',
 })
 
-const notoSerif = Noto_Serif_KR({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-noto-serif-kr',
+  variable: '--font-jakarta',
   display: 'swap',
 })
 
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#f8f5ee',
+  themeColor: '#f9fafc',
   width: 'device-width',
   initialScale: 1,
 }
@@ -44,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" className={`${notoSans.variable} ${notoSerif.variable} bg-background`}>
+    <html lang="ko" className={`${notoSans.variable} ${jakarta.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

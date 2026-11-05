@@ -29,7 +29,7 @@ export function PrayerView() {
     <div className="flex flex-col gap-5 px-5 pt-2 pb-8">
       <div className="flex items-end justify-between">
         <div className="flex flex-col gap-0.5">
-          <h1 className="font-serif text-2xl font-semibold">함께 기도하고 묵상해요</h1>
+          <h1 className="tracking-tight text-2xl font-semibold">함께 기도하고 묵상해요</h1>
           <p className="text-sm text-muted-foreground">서로의 짐을 지는 다락방</p>
         </div>
       </div>
@@ -88,7 +88,7 @@ function FeedCard({ post }: { post: FeedPost }) {
         </div>
       </div>
       {post.verse && (
-        <span className="flex w-fit items-center gap-1.5 rounded-full bg-highlight px-3 py-1 font-serif text-xs font-semibold text-accent-foreground">
+        <span className="flex w-fit items-center gap-1.5 rounded-full bg-highlight px-3 py-1 tracking-tight text-xs font-semibold text-accent-foreground">
           <BookMarked className="size-3.5" aria-hidden />
           {post.verse}
         </span>
@@ -142,7 +142,7 @@ function NewPostDialog({
     >
       <DialogContent className="gap-4 rounded-2xl bg-card p-5" key={String(open) + defaultType}>
         <DialogHeader>
-          <DialogTitle className="font-serif text-lg">새 글 나누기</DialogTitle>
+          <DialogTitle className="tracking-tight text-lg">새 글 나누기</DialogTitle>
           <DialogDescription>다락방 멤버들에게만 공개돼요.</DialogDescription>
         </DialogHeader>
         <form

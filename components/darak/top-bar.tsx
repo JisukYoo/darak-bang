@@ -20,7 +20,7 @@ export function TopBar() {
         aria-haspopup="dialog"
       >
         <span className="truncate text-xs text-muted-foreground">{church?.name}</span>
-        <span className="flex items-center gap-1 font-serif text-lg font-semibold">
+        <span className="flex items-center gap-1 tracking-tight text-lg font-semibold">
           <span className="truncate">{group?.name}</span>
           <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
         </span>
@@ -38,7 +38,7 @@ export function TopBar() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="gap-4 rounded-2xl bg-card p-5">
           <DialogHeader>
-            <DialogTitle className="font-serif text-lg">다락방 전환</DialogTitle>
+            <DialogTitle className="tracking-tight text-lg">다락방 전환</DialogTitle>
             <DialogDescription>{church?.name}의 다락방</DialogDescription>
           </DialogHeader>
           <ul className="flex flex-col gap-1.5">

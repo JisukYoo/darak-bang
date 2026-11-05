@@ -59,7 +59,7 @@ export function GiftView() {
         <span className="flex size-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
           <PackageCheck className="size-8" aria-hidden />
         </span>
-        <h1 className="font-serif text-2xl font-semibold text-balance">{recipientName}님께 선물이 준비되고 있어요</h1>
+        <h1 className="tracking-tight text-2xl font-semibold text-balance">{recipientName}님께 선물이 준비되고 있어요</h1>
         <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
           {cover.name} 성경과 손글씨 레터링 카드가 2~3일 내에 도착할 예정이에요. 받는 분을 위해 다락방에서 함께 기도해 주세요.
         </p>
@@ -85,7 +85,7 @@ export function GiftView() {
   return (
     <div className="flex flex-col gap-6 px-5 pt-2 pb-8">
       <div className="flex flex-col gap-1">
-        <h1 className="font-serif text-2xl font-semibold text-balance">말씀 한 권, 마음 한 장</h1>
+        <h1 className="tracking-tight text-2xl font-semibold text-balance">말씀 한 권, 마음 한 장</h1>
         <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
           힘든 시간을 보내는 친구에게 맞춤 성경과 위로의 편지를 선물하세요.
         </p>
@@ -168,7 +168,7 @@ export function GiftView() {
       {result && (
         <>
           <section id="gift-result" aria-labelledby="ai-result-title" className="flex scroll-mt-20 flex-col gap-4">
-            <h2 id="ai-result-title" className="flex items-center gap-2 font-serif text-lg font-semibold">
+            <h2 id="ai-result-title" className="flex items-center gap-2 tracking-tight text-lg font-semibold">
               <BookHeart className="size-5 text-primary" aria-hidden />
               추천 말씀
             </h2>
@@ -176,7 +176,7 @@ export function GiftView() {
               {result.verses.map((v) => (
                 <li key={v.reference} className="flex flex-col gap-2 rounded-2xl bg-highlight/50 p-4 ring-1 ring-accent/30">
                   <span className="text-xs font-semibold text-accent-foreground">{v.reference}</span>
-                  <p className="font-serif text-[15px] leading-relaxed">{v.text}</p>
+                  <p className="tracking-tight text-[15px] leading-relaxed">{v.text}</p>
                   <p className="text-xs leading-relaxed text-muted-foreground">{v.reason}</p>
                 </li>
               ))}
@@ -184,7 +184,7 @@ export function GiftView() {
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="gift-letter" className="font-serif text-lg font-semibold">
+                <Label htmlFor="gift-letter" className="tracking-tight text-lg font-semibold">
                   AI 추천 전도 레터링
                 </Label>
                 <button
@@ -201,7 +201,7 @@ export function GiftView() {
                 value={letter}
                 onChange={(e) => setLetter(e.target.value)}
                 rows={10}
-                className="rounded-2xl bg-card p-4 font-serif text-[15px] leading-loose shadow-sm"
+                className="rounded-2xl bg-card p-4 tracking-tight text-[15px] leading-loose shadow-sm"
               />
               <p className="text-right text-xs text-muted-foreground">{letter.length}자 · 자유롭게 수정할 수 있어요</p>
             </div>
@@ -234,7 +234,7 @@ function CheckoutSection({
 
   return (
     <section aria-labelledby="checkout-title" className="flex flex-col gap-4 rounded-3xl bg-card p-5 shadow-sm ring-1 ring-border">
-      <h2 id="checkout-title" className="font-serif text-lg font-semibold">
+      <h2 id="checkout-title" className="tracking-tight text-lg font-semibold">
         주문 정보
       </h2>
       <dl className="flex flex-col gap-2 text-sm">

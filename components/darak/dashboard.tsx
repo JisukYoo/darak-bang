@@ -12,7 +12,7 @@ export function Dashboard() {
     <div className="flex flex-col gap-6 px-5 pt-2 pb-8">
       <div className="flex flex-col gap-0.5">
         <p className="text-sm text-muted-foreground">11월 5일 수요일</p>
-        <h1 className="font-serif text-2xl font-semibold text-balance">평안한 하루예요, 은혜님</h1>
+        <h1 className="tracking-tight text-2xl font-semibold text-balance">평안한 하루예요, 은혜님</h1>
       </div>
       <GatheringCard />
       <QuickActions />
@@ -27,11 +27,11 @@ function GatheringCard() {
   return (
     <section
       aria-labelledby="gathering-title"
-      className="relative overflow-hidden rounded-t-[9rem] rounded-b-3xl bg-primary px-6 pt-14 pb-6 text-primary-foreground shadow-md"
+      className="relative overflow-hidden rounded-3xl bg-primary px-6 pt-8 pb-6 text-primary-foreground shadow-md"
     >
       <div className="flex flex-col items-center gap-1 text-center">
         <p className="text-xs font-medium tracking-widest text-primary-foreground/75 uppercase">다음 모임</p>
-        <h2 id="gathering-title" className="font-serif text-3xl font-semibold">
+        <h2 id="gathering-title" className="tracking-tight text-3xl font-semibold">
           11월 7일 금요일
         </h2>
         <p className="text-sm text-primary-foreground/80">이번 주 나눔 · 요한복음 15장</p>
@@ -114,7 +114,7 @@ function NoticeSection() {
   return (
     <section id="notices" aria-labelledby="notice-title" className="flex scroll-mt-20 flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 id="notice-title" className="font-serif text-lg font-semibold">
+        <h2 id="notice-title" className="tracking-tight text-lg font-semibold">
           공지사항
         </h2>
         <button
