@@ -4,14 +4,16 @@ import { useState } from 'react'
 import {
   BookOpenText,
   CalendarDays,
-  ChevronDown,
+  ChevronRight,
   ClipboardCheck,
   Clock,
   HandHeart,
   ImageIcon,
   ImagePlus,
   MapPin,
+  MessageCircle,
   Music2,
+  PenLine,
   Pin,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -21,6 +23,7 @@ import { useBanner, usePhotos } from '@/hooks/use-photos'
 import { useApp } from './app-provider'
 import { BannerPicker } from './banner-picker'
 import { MemberAvatar } from './member-avatar'
+import { NoticeComposeDialog } from './notice-compose-dialog'
 import { PhotoUploadButton } from './photo-upload-button'
 
 export function Dashboard() {
@@ -188,10 +191,11 @@ function QuickActions() {
 }
 
 function NoticeSection() {
-  const { notices } = useApp()
-  const [openId, setOpenId] = useState<string | null>(notices[0]?.id ?? null)
+  const { notices, comments, openNotice, me } = useApp()
   const [showAll, setShowAll] = useState(false)
-  const visible = showAll ? notices : notices.slice(0, 2)
+  const [composeOpen, setComposeOpen] = useState(false)
+  const visible = showAll ? notices : notices.slice(0, 3)
+  const canWrite = me.role === '리더' || me.role === '부리더'
 
   return (
     <section id="notices" aria-labelledby="notice-title" className="flex scroll-mt-20 flex-col gap-3">
@@ -199,18 +203,33 @@ function NoticeSection() {
         <h2 id="notice-title" className="tracking-tight text-lg font-semibold">
           공지사항
         </h2>
-        <button
-          type="button"
-          onClick={() => setShowAll((v) => !v)}
-          className="text-sm font-medium text-primary"
-          aria-expanded={showAll}
-        >
-          {showAll ? '접기' : `전체 ${notices.length}개 보기`}
-        </button>
+        <div className="flex items-center gap-3">
+          {canWrite && (
+            <button
+              type="button"
+              onClick={() => setComposeOpen(true)}
+              className="flex items-center gap-1 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground"
+            >
+              <PenLine className="size-3.5" aria-hidden />
+              공지 쓰기
+            </button>
+          )}
+          {notices.length > 3 && (
+            <button
+              type="button"
+              onClick={() => setShowAll((v) => !v)}
+              className="text-sm font-medium text-primary"
+              aria-expanded={showAll}
+            >
+              {showAll ? '접기' : `전체 ${notices.length}개`}
+            </button>
+          )}
+        </div>
       </div>
+      <NoticeComposeDialog open={composeOpen} onOpenChange={setComposeOpen} />
       <ul className="flex flex-col gap-2">
         {visible.map((notice) => {
-          const open = openId === notice.id
+          const commentCount = comments.filter((c) => c.noticeId === notice.id).length
           return (
             <li
               key={notice.id}
@@ -221,8 +240,7 @@ function NoticeSection() {
             >
               <button
                 type="button"
-                onClick={() => setOpenId(open ? null : notice.id)}
-                aria-expanded={open}
+                onClick={() => openNotice(notice.id)}
                 className="flex w-full items-start gap-3 p-4 text-left"
               >
                 <span
@@ -233,23 +251,29 @@ function NoticeSection() {
                 >
                   {notice.pinned ? <Pin className="size-4" aria-hidden /> : <CalendarDays className="size-4" aria-hidden />}
                 </span>
-                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <span className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="font-medium text-pretty">{notice.title}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {notice.pinned && '고정 · '}
-                    {notice.date}
+                  <span className="line-clamp-1 text-sm text-muted-foreground">{notice.body}</span>
+                  <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                    <span>
+                      {notice.pinned && '고정 · '}
+                      {notice.date}
+                    </span>
+                    {notice.address && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="size-3" aria-hidden />
+                        장소
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <MessageCircle className="size-3" aria-hidden />
+                      <span className="sr-only">댓글</span>
+                      {commentCount}
+                    </span>
                   </span>
                 </span>
-                <ChevronDown
-                  className={cn('mt-1 size-4 shrink-0 text-muted-foreground transition-transform', open && 'rotate-180')}
-                  aria-hidden
-                />
+                <ChevronRight className="mt-1 size-4 shrink-0 text-muted-foreground" aria-hidden />
               </button>
-              {open && (
-                <p className="px-4 pb-4 pl-15 text-sm leading-relaxed text-muted-foreground animate-in fade-in-0 slide-in-from-top-1">
-                  {notice.body}
-                </p>
-              )}
             </li>
           )
         })}

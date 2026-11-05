@@ -26,6 +26,9 @@
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --color-highlight: var(--highlight);
+  --color-warm: var(--warm);
+  --color-brand-ink: var(--brand-ink);
+  --font-logo: var(--font-gaegu), 'Gaegu', var(--font-noto-sans-kr), cursive;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -35,29 +38,31 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Palette: airy cool white, ink navy, electric blue, butter yellow */
+/* Palette from the mug emblem: peach milk white, cocoa ink, warm coral, mint handle, honey glow */
 :root {
   color-scheme: light;
-  --background: oklch(0.985 0.004 250);
-  --foreground: oklch(0.22 0.03 265);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.03 265);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.03 265);
-  --primary: oklch(0.6 0.2 258);
-  --primary-foreground: oklch(0.99 0.005 250);
-  --secondary: oklch(0.95 0.03 250);
-  --secondary-foreground: oklch(0.45 0.16 258);
-  --muted: oklch(0.96 0.006 250);
-  --muted-foreground: oklch(0.52 0.02 260);
-  --accent: oklch(0.9 0.15 98);
-  --accent-foreground: oklch(0.32 0.07 80);
-  --highlight: oklch(0.95 0.1 100);
-  --destructive: oklch(0.63 0.21 22);
-  --border: oklch(0.92 0.01 255);
-  --input: oklch(0.9 0.012 255);
-  --ring: oklch(0.6 0.2 258);
-  --radius: 1.125rem;
+  --background: oklch(0.985 0.01 65);
+  --foreground: oklch(0.32 0.05 45);
+  --card: oklch(1 0.003 65);
+  --card-foreground: oklch(0.32 0.05 45);
+  --popover: oklch(1 0.003 65);
+  --popover-foreground: oklch(0.32 0.05 45);
+  --primary: oklch(0.62 0.15 40);
+  --primary-foreground: oklch(0.99 0.008 65);
+  --secondary: oklch(0.95 0.035 55);
+  --secondary-foreground: oklch(0.47 0.12 40);
+  --muted: oklch(0.96 0.012 65);
+  --muted-foreground: oklch(0.52 0.035 50);
+  --accent: oklch(0.9 0.07 170);
+  --accent-foreground: oklch(0.38 0.07 175);
+  --highlight: oklch(0.95 0.06 80);
+  --warm: oklch(0.7 0.14 42);
+  --brand-ink: oklch(0.36 0.06 45);
+  --destructive: oklch(0.58 0.2 25);
+  --border: oklch(0.92 0.02 60);
+  --input: oklch(0.89 0.025 60);
+  --ring: oklch(0.62 0.15 40);
+  --radius: 1.25rem;
 }
 
 @layer base {

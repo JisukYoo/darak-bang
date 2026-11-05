@@ -1,7 +1,14 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_KR, Plus_Jakarta_Sans } from 'next/font/google'
+import { Gaegu, Noto_Sans_KR, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+
+const gaegu = Gaegu({
+  subsets: ['latin'],
+  weight: '700',
+  variable: '--font-gaegu',
+  display: 'swap',
+})
 
 const notoSans = Noto_Sans_KR({
   subsets: ['latin'],
@@ -17,17 +24,13 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: '다락방 Darakbang — 함께 말씀과 기도로',
+  title: '온다락방 — 따뜻한 다락방 공동체',
   description:
     '교회 다락방(소그룹) 모임을 위한 앱. 출석체크, 기도제목 나눔, 말씀 묵상, 성경 읽기, 맞춤 성경 선물까지.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/logo.webp',
+    apple: '/logo.webp',
   },
 }
 
@@ -44,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" className={`${notoSans.variable} ${jakarta.variable} bg-background`}>
+    <html lang="ko" className={`${notoSans.variable} ${jakarta.variable} ${gaegu.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

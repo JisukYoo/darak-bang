@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { BrandLogo } from './brand-logo'
 import { Bell, Check, ChevronDown, RefreshCw } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -13,6 +14,9 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-3 bg-background/90 px-5 py-3 backdrop-blur">
+      <div className="flex min-w-0 items-center gap-3">
+      <BrandLogo size="sm" />
+      <span aria-hidden className="h-10 w-px shrink-0 bg-border" />
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -26,6 +30,7 @@ export function TopBar() {
         </span>
         <span className="sr-only">다락방 전환</span>
       </button>
+      </div>
       <button
         type="button"
         className="relative flex size-10 items-center justify-center rounded-full bg-card shadow-sm ring-1 ring-border"

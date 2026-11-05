@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowLeft, CheckCheck } from 'lucide-react'
+import { ArrowLeft, CheckCheck, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { type AttendanceStatus, members } from '@/lib/darak-data'
+import { type AttendanceStatus, type Member, members } from '@/lib/darak-data'
 import { useApp } from './app-provider'
 import { MemberAvatar } from './member-avatar'
 
@@ -26,6 +26,7 @@ export function AttendanceView() {
   }
   const attended = counts.present + counts.online
   const percent = Math.round((attended / total) * 100)
+  const units = groupCouples(members, !!group?.isCouple)
 
   return (
     <div className="flex flex-col gap-5 px-5 pt-2 pb-8">
@@ -93,10 +94,73 @@ export function AttendanceView() {
       </div>
 
       <ul className="flex flex-col gap-2">
-        {members.map((member) => {
-          const status = attendance[member.id]
-          return (
-            <li key={member.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-sm ring-1 ring-border">
+        {units.map((unit) => (
+          <li
+            key={unit.map((m) => m.id).join('-')}
+            className="flex flex-col overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-border"
+          >
+            {unit.length === 2 && (
+              <div className="flex items-center gap-2 bg-secondary/60 px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
+                <Heart className="size-3" aria-hidden />
+                {unit[0].name} · {unit[1].name} 부부
+              </div>
+            )}
+            <ul className={cn('flex flex-col', unit.length === 2 && 'divide-y')}>
+              {unit.map((member) => (
+                <MemberRow
+                  key={member.id}
+                  member={member}
+                  status={attendance[member.id]}
+                  onChange={(value) => {
+                    setAttendance(member.id, value)
+                    setSaved(false)
+                  }}
+                />
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+
+      <Button className="h-12 rounded-xl text-base" onClick={() => setSaved(true)}>
+        {saved ? '저장되었어요' : '출석 저장하기'}
+      </Button>
+      <p className="sr-only" aria-live="polite">
+        {saved ? '출석이 저장되었습니다' : ''}
+      </p>
+    </div>
+  )
+}
+
+function groupCouples(list: Member[], enabled: boolean): Member[][] {
+  if (!enabled) return list.map((m) => [m])
+  const seen = new Set<string>()
+  const units: Member[][] = []
+  for (const m of list) {
+    if (seen.has(m.id)) continue
+    seen.add(m.id)
+    const partner = m.spouseId ? list.find((p) => p.id === m.spouseId) : undefined
+    if (partner && !seen.has(partner.id)) {
+      seen.add(partner.id)
+      units.push([m, partner])
+    } else {
+      units.push([m])
+    }
+  }
+  return units
+}
+
+function MemberRow({
+  member,
+  status,
+  onChange,
+}: {
+  member: Member
+  status: AttendanceStatus
+  onChange: (value: Exclude<AttendanceStatus, 'unmarked'>) => void
+}) {
+  return (
+            <li className="flex items-center gap-3 p-3">
               <MemberAvatar member={member} />
               <div className="flex min-w-0 flex-1 flex-col">
                 <span className="truncate text-sm font-medium">{member.name}</span>
@@ -111,10 +175,7 @@ export function AttendanceView() {
                       type="button"
                       role="radio"
                       aria-checked={active}
-                      onClick={() => {
-                        setAttendance(member.id, opt.value)
-                        setSaved(false)
-                      }}
+                      onClick={() => onChange(opt.value)}
                       className={cn(
                         'rounded-full px-2.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors',
                         active ? opt.active : 'text-muted-foreground hover:text-foreground',
@@ -126,16 +187,5 @@ export function AttendanceView() {
                 })}
               </div>
             </li>
-          )
-        })}
-      </ul>
-
-      <Button className="h-12 rounded-xl text-base" onClick={() => setSaved(true)}>
-        {saved ? '저장되었어요' : '출석 저장하기'}
-      </Button>
-      <p className="sr-only" aria-live="polite">
-        {saved ? '출석이 저장되었습니다' : ''}
-      </p>
-    </div>
   )
 }
