@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { BookMarked, HandHeart, PenLine, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
@@ -12,6 +11,7 @@ import { type FeedPost, members } from '@/lib/darak-data'
 import { useApp } from './app-provider'
 import { CoupleAvatars, MemberAvatar } from './member-avatar'
 import { PostEditDialog } from './post-edit-dialog'
+import { VersePicker } from './verse-picker'
 
 type FeedType = FeedPost['type']
 
@@ -228,12 +228,7 @@ function NewPostDialog({
               </span>
             </button>
           )}
-          {type === 'meditation' && (
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="post-verse">오늘의 말씀</Label>
-              <Input id="post-verse" name="verse" placeholder="예) 빌립보서 4:6" className="h-11 rounded-xl bg-background" />
-            </div>
-          )}
+          {type === 'meditation' && <VersePicker />}
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="post-content">{type === 'prayer' ? '기도제목' : '묵상 내용'}</Label>
             <Textarea
