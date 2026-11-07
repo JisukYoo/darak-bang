@@ -28,9 +28,18 @@ export const metadata: Metadata = {
   description:
     '교회 다락방(소그룹) 모임을 위한 앱. 출석체크, 기도제목 나눔, 말씀 묵상, 성경 읽기, 맞춤 성경 선물까지.',
   generator: 'v0.app',
+  applicationName: '온다락방',
   icons: {
-    icon: '/logo.webp',
-    apple: '/logo.webp',
+    icon: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: '온다락방',
+    statusBarStyle: 'default',
   },
 }
 
