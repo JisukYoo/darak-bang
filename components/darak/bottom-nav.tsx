@@ -14,24 +14,24 @@ const items: { id: Exclude<Tab, 'profile'>; label: string; icon: typeof Home }[]
 ]
 
 const SCROLL_DELTA = 8
-const TOP_ZONE = 48
-const BOTTOM_ZONE = 24
+const TOP_ZONE = 24
 
 function useHideOnScroll(resetKey: string) {
   const [hidden, setHidden] = useState(false)
 
   useEffect(() => {
     setHidden(false)
-    let lastY = window.scrollY
+    window.scrollTo({ top: 0 })
+    let lastY = 0
     let ticking = false
 
     const update = () => {
       ticking = false
-      const y = window.scrollY
-      const atTop = y < TOP_ZONE
-      const atBottom = window.innerHeight + y >= document.documentElement.scrollHeight - BOTTOM_ZONE
+      const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+      // Clamp so iOS rubber-band overscroll at either edge doesn't read as a direction change.
+      const y = Math.min(Math.max(window.scrollY, 0), maxY)
 
-      if (atTop || atBottom) {
+      if (y < TOP_ZONE) {
         setHidden(false)
       } else if (y - lastY > SCROLL_DELTA) {
         setHidden(true)
@@ -58,9 +58,9 @@ function useHideOnScroll(resetKey: string) {
 }
 
 export function BottomNav() {
-  const { tab, setTab, me } = useApp()
+  const { tab, setTab, me, homeView, profileView } = useApp()
   const profileActive = tab === 'profile'
-  const hidden = useHideOnScroll(tab)
+  const hidden = useHideOnScroll(`${tab}-${homeView}-${profileView}`)
 
   return (
     <nav
@@ -69,7 +69,7 @@ export function BottomNav() {
       className={cn(
         'pointer-events-none sticky bottom-0 z-30 flex justify-center px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]',
         'transition-transform duration-300 ease-out motion-reduce:transition-none',
-        'data-[hidden]:translate-y-[calc(100%+1rem)] data-[hidden]:focus-within:translate-y-0',
+        'data-[hidden]:translate-y-[calc(100%+1rem)] data-[hidden]:has-[:focus-visible]:translate-y-0',
       )}
     >
       <ul className="pointer-events-auto flex w-full max-w-md items-center gap-1 rounded-full bg-foreground p-1.5 text-background shadow-xl shadow-foreground/25">
