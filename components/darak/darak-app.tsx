@@ -12,6 +12,7 @@ import { OnboardingWizard } from './onboarding-wizard'
 import { PhotosView } from './photos-view'
 import { PrayerView } from './prayer-view'
 import { ProfileView } from './profile-view'
+import { SavedVersesView } from './saved-verses-view'
 import { TopBar } from './top-bar'
 
 export function DarakApp() {
@@ -25,14 +26,14 @@ export function DarakApp() {
 }
 
 function Screens() {
-  const { groupId, tab, homeView } = useApp()
+  const { groupId, tab, homeView, profileView } = useApp()
 
   if (!groupId) return <OnboardingWizard />
 
   return (
     <div className="flex min-h-dvh flex-col">
       <TopBar />
-      <main key={`${tab}-${homeView}`} className="flex-1 animate-in fade-in-0 duration-300">
+      <main key={`${tab}-${homeView}-${profileView}`} className="flex-1 animate-in fade-in-0 duration-300">
         {tab === 'home' &&
           (homeView === 'attendance' ? (
             <AttendanceView />
@@ -48,7 +49,7 @@ function Screens() {
         {tab === 'bible' && <BibleView />}
         {tab === 'prayer' && <PrayerView />}
         {tab === 'gift' && <GiftView />}
-        {tab === 'profile' && <ProfileView />}
+        {tab === 'profile' && (profileView === 'saved' ? <SavedVersesView /> : <ProfileView />)}
       </main>
       <BottomNav />
     </div>
