@@ -1,52 +1,72 @@
 'use client'
 
-import { BookOpen, Gift, HandHeart, Home, UserRound } from 'lucide-react'
+import { BookOpen, Gift, HandHeart, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { type Tab, useApp } from './app-provider'
+import { MemberAvatar } from './member-avatar'
 
-const items: { id: Tab; label: string; icon: typeof Home }[] = [
+const items: { id: Exclude<Tab, 'profile'>; label: string; icon: typeof Home }[] = [
   { id: 'home', label: '홈', icon: Home },
   { id: 'bible', label: '성경', icon: BookOpen },
   { id: 'prayer', label: '기도·묵상', icon: HandHeart },
   { id: 'gift', label: '전도선물', icon: Gift },
-  { id: 'profile', label: '내 정보', icon: UserRound },
 ]
 
 export function BottomNav() {
-  const { tab, setTab } = useApp()
+  const { tab, setTab, me } = useApp()
+  const profileActive = tab === 'profile'
 
   return (
     <nav
       aria-label="주요 메뉴"
-      className="sticky bottom-0 z-30 border-t bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
+      className="pointer-events-none sticky bottom-0 z-30 flex justify-center px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]"
     >
-      <ul className="grid grid-cols-5">
+      <ul className="pointer-events-auto flex w-full max-w-md items-center gap-1 rounded-full bg-foreground p-1.5 text-background shadow-xl shadow-foreground/25">
         {items.map(({ id, label, icon: Icon }) => {
           const active = tab === id
           return (
-            <li key={id}>
+            <li key={id} className="flex-1">
               <button
                 type="button"
                 onClick={() => setTab(id)}
                 aria-current={active ? 'page' : undefined}
+                aria-label={label}
+                title={label}
                 className={cn(
-                  'flex w-full flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors',
-                  active ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+                  'flex h-12 w-full items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                  active ? 'bg-background/15' : 'text-background/70 hover:text-background',
                 )}
               >
-                <span
-                  className={cn(
-                    'flex h-7 w-12 items-center justify-center rounded-full transition-colors',
-                    active && 'bg-secondary',
-                  )}
-                >
-                  <Icon className="size-5" strokeWidth={active ? 2.2 : 1.8} aria-hidden />
-                </span>
-                {label}
+                <Icon
+                  className="size-6"
+                  strokeWidth={active ? 2.4 : 1.8}
+                  fill={active ? 'currentColor' : 'none'}
+                  fillOpacity={active ? 0.25 : 0}
+                  aria-hidden
+                />
               </button>
             </li>
           )
         })}
+        <li className="flex-1">
+          <button
+            type="button"
+            onClick={() => setTab('profile')}
+            aria-current={profileActive ? 'page' : undefined}
+            aria-label="내 정보"
+            title="내 정보"
+            className={cn(
+              'flex h-12 w-full items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              profileActive && 'bg-background/15',
+            )}
+          >
+            <MemberAvatar
+              member={me}
+              size="sm"
+              className={cn('ring-2 transition', profileActive ? 'ring-primary' : 'ring-transparent')}
+            />
+          </button>
+        </li>
       </ul>
     </nav>
   )

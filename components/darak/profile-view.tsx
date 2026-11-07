@@ -1,25 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { Bookmark, Church, HandHeart, Heart, LogOut, Pencil, Users } from 'lucide-react'
-import { bibleBooks, bibleText, type FeedPost, members } from '@/lib/darak-data'
+import { Bookmark, ChevronRight, Church, HandHeart, Heart, LogOut, Pencil, Users } from 'lucide-react'
+import { type FeedPost, members } from '@/lib/darak-data'
 import { useApp } from './app-provider'
 import { CoupleAvatars, MemberAvatar } from './member-avatar'
 import { PostEditDialog } from './post-edit-dialog'
+import { PrayingDialog } from './praying-dialog'
 
 export function ProfileView() {
-  const { church, group, bookmarks, posts, selectChurch, setTab, me, spouse } = useApp()
+  const { church, group, bookmarks, posts, selectChurch, setTab, setProfileView, me, spouse } = useApp()
   const [editing, setEditing] = useState<FeedPost | null>(null)
+  const [prayingOpen, setPrayingOpen] = useState(false)
   const myPrayers = posts.filter((p) => p.prayedByMe).length
   const couplePrayers = spouse
     ? posts.filter((p) => p.type === 'prayer' && p.coAuthorId && [p.authorId, p.coAuthorId].includes(me.id))
     : []
-
-  const savedVerses = bookmarks.map((key) => {
-    const [bookId, ch, v] = key.split('-')
-    const book = bibleBooks.find((b) => b.id === bookId)
-    return { key, ref: `${book?.name} ${ch}:${v}`, text: bibleText[`${bookId}-${ch}`]?.[Number(v) - 1] }
-  })
 
   return (
     <div className="flex flex-col gap-6 px-5 pt-2 pb-8">
@@ -88,44 +84,30 @@ export function ProfileView() {
         </section>
       )}
 
-      <dl className="grid grid-cols-2 gap-2">
-        <div className="flex flex-col gap-1 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border">
-          <dt className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => setPrayingOpen(true)}
+          className="flex flex-col gap-1 rounded-2xl bg-card p-4 text-left shadow-sm ring-1 ring-border transition active:scale-[0.98]"
+        >
+          <span className="flex w-full items-center gap-1.5 text-xs text-muted-foreground">
             <HandHeart className="size-3.5" aria-hidden />함께 기도 중
-          </dt>
-          <dd className="text-xl font-semibold">{myPrayers}개</dd>
-        </div>
-        <div className="flex flex-col gap-1 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border">
-          <dt className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ChevronRight className="ml-auto size-3.5" aria-hidden />
+          </span>
+          <span className="text-xl font-semibold">{myPrayers}개</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setProfileView('saved')}
+          className="flex flex-col gap-1 rounded-2xl bg-card p-4 text-left shadow-sm ring-1 ring-border transition active:scale-[0.98]"
+        >
+          <span className="flex w-full items-center gap-1.5 text-xs text-muted-foreground">
             <Bookmark className="size-3.5" aria-hidden />저장한 말씀
-          </dt>
-          <dd className="text-xl font-semibold">{bookmarks.length}구절</dd>
-        </div>
-      </dl>
-
-      <section aria-labelledby="saved-title" className="flex flex-col gap-3">
-        <h2 id="saved-title" className="tracking-tight text-lg font-semibold">
-          저장한 말씀
-        </h2>
-        {savedVerses.length ? (
-          <ul className="flex flex-col gap-2">
-            {savedVerses.map((v) => (
-              <li key={v.key} className="flex flex-col gap-1 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border">
-                <span className="text-xs font-semibold text-primary">{v.ref}</span>
-                <p className="tracking-tight text-[15px] leading-relaxed">{v.text}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setTab('bible')}
-            className="rounded-2xl border border-dashed p-5 text-sm text-muted-foreground"
-          >
-            성경을 읽으며 마음에 남는 구절을 저장해 보세요
-          </button>
-        )}
-      </section>
+            <ChevronRight className="ml-auto size-3.5" aria-hidden />
+          </span>
+          <span className="text-xl font-semibold">{bookmarks.length}구절</span>
+        </button>
+      </div>
 
       <section aria-label="소속" className="flex flex-col divide-y overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-border">
         <div className="flex items-center gap-3 p-4 text-sm">
@@ -148,6 +130,7 @@ export function ProfileView() {
         </button>
       </section>
       <PostEditDialog post={editing} onOpenChange={(open) => !open && setEditing(null)} />
+      <PrayingDialog open={prayingOpen} onOpenChange={setPrayingOpen} />
     </div>
   )
 }

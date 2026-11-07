@@ -21,6 +21,7 @@ import {
 
 export type Tab = 'home' | 'bible' | 'prayer' | 'gift' | 'profile'
 export type HomeView = 'dashboard' | 'attendance' | 'hymns' | 'photos' | 'notice'
+export type ProfileSubView = 'main' | 'saved'
 
 export type NewNotice = Pick<Notice, 'title' | 'body' | 'pinned' | 'address' | 'commentPrompt'>
 
@@ -39,6 +40,8 @@ type AppState = {
   setTab: (tab: Tab) => void
   homeView: HomeView
   setHomeView: (view: HomeView) => void
+  profileView: ProfileSubView
+  setProfileView: (view: ProfileSubView) => void
   attendance: Record<string, AttendanceStatus>
   setAttendance: (memberId: string, status: AttendanceStatus) => void
   markAll: (status: AttendanceStatus) => void
@@ -71,6 +74,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [groupId, setGroupId] = useState<string | null>(null)
   const [tab, setTabState] = useState<Tab>('home')
   const [homeView, setHomeView] = useState<HomeView>('dashboard')
+  const [profileView, setProfileView] = useState<ProfileSubView>('main')
   const [attendance, setAttendanceState] = useState(initialAttendance)
   const [posts, setPosts] = useState<FeedPost[]>(initialPosts)
   const [bookmarks, setBookmarks] = useState<string[]>(['jhn-15-5'])
@@ -147,6 +151,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setTab = useCallback((next: Tab) => {
     setTabState(next)
     if (next === 'home') setHomeView('dashboard')
+    if (next === 'profile') setProfileView('main')
   }, [])
 
   const setAttendance = useCallback((memberId: string, status: AttendanceStatus) => {
@@ -206,6 +211,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setTab,
       homeView,
       setHomeView,
+      profileView,
+      setProfileView,
       attendance,
       setAttendance,
       markAll,
@@ -228,7 +235,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       highlights,
       toggleHighlight: toggleIn(setHighlights),
     }),
-    [churches, groups, churchId, groupId, group, selectChurch, addChurch, addGroup, tab, setTab, homeView, attendance, setAttendance, markAll, posts, togglePray, addPost, editPost, me, spouse, canEditPost, notices, addNotice, openNotice, noticeId, comments, addComment, deleteComment, bookmarks, highlights],
+    [churches, groups, churchId, groupId, group, selectChurch, addChurch, addGroup, tab, setTab, homeView, profileView, attendance, setAttendance, markAll, posts, togglePray, addPost, editPost, me, spouse, canEditPost, notices, addNotice, openNotice, noticeId, comments, addComment, deleteComment, bookmarks, highlights],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
